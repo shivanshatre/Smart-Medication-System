@@ -1,0 +1,180 @@
+#include <LiquidCrystal.h>
+const int rs = 2;
+const int en = 3;
+const int d4 = 4;
+const int d5 = 5;
+const int d6 = 6;
+const int d7 = 7;
+const int L1 = 8;
+const int L2 = 9;
+const int L3 = 10;
+const int L4 = 13;
+
+const int pb = 11;
+const int echo=A0;
+const int trig=A1;
+const int echo1=A2;
+const int trig1=A3;
+
+const int buzzer = 12;
+long duration;
+int distCM;
+long duration1;
+int distCM1;
+
+
+ int count_crocin=1;
+  int count_flexon=10;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+int h = 00;
+int m = 4;
+int s = 55;
+int flag = 0;
+int TIME = 0;
+const int hs = 0;
+const int ms = 1;
+int state1 = 0;
+int state2 = 0;
+
+
+void setup()
+{
+    lcd.begin(16, 2);
+    pinMode(hs, INPUT_PULLUP);
+    pinMode(ms, INPUT_PULLUP);
+    pinMode(L1, OUTPUT);
+    pinMode(L2, OUTPUT);
+    pinMode(L3, OUTPUT);
+    pinMode(L4, OUTPUT);
+    
+    
+    pinMode(buzzer, OUTPUT);
+    pinMode(pb, INPUT_PULLUP);
+    
+    Serial.begin(9600);
+  pinMode(echo, INPUT);
+pinMode(trig, OUTPUT);
+   pinMode(echo1, INPUT);
+pinMode(trig1, OUTPUT);
+   
+  
+  
+}
+
+void loop()
+{
+  empty();
+  
+ 
+ int v = digitalRead(pb);
+  
+    lcd.setCursor(0, 0);
+    s = s + 1;
+    lcd.print("TIME:");
+    lcd.print(h);
+    lcd.print(":");
+    lcd.print(m);
+    lcd.print(":");
+    lcd.print(s);
+
+    if (flag == 24)
+        flag = 0;
+    delay(1000);
+    lcd.clear();
+    if (s == 60)
+    {
+        s = 0;
+        m = m + 1;
+    }
+    if (m == 60)
+    {
+        m = 0;
+        h = h + 1;
+        flag = flag + 1;
+    }
+    if (h == 24)
+    {
+        h = 0;
+    }
+    lcd.setCursor(0, 1);
+
+    
+    
+  
+    if (h == 0 && m == 5)
+    {
+        // 1st led
+        if (s <= 10 )
+        {
+            digitalWrite(L1, HIGH);
+            digitalWrite(buzzer, HIGH);
+            lcd.print("Crocin");
+      
+          
+          
+        }
+        
+    }
+    if (v == 0)
+    {
+        digitalWrite(L1, LOW);
+        digitalWrite(buzzer, LOW);
+    }
+ 
+  if (h == 0 && m == 6)
+    {
+       
+        // 2nd led
+        if (s<=10)
+        {
+            digitalWrite(L2, HIGH);
+            digitalWrite(buzzer, HIGH);
+            lcd.print("Flexon");
+          count_flexon=count_flexon-1;
+        }
+    }
+    if (v == 0)
+    {
+        digitalWrite(L2, LOW);
+        digitalWrite(buzzer, LOW);
+    }
+ 
+ 
+  
+}
+ 
+void empty(){
+//led4
+  digitalWrite(trig, LOW);
+
+digitalWrite(trig, HIGH);
+
+digitalWrite(trig, LOW);
+  duration = pulseIn(echo, HIGH);
+distCM= duration*0.034/2;
+  if (distCM >=10) {
+
+digitalWrite(L4, HIGH);
+} else {
+
+digitalWrite(L4, LOW);
+}
+  
+  //led5
+  digitalWrite(trig1, LOW);
+
+digitalWrite(trig1, HIGH);
+
+digitalWrite(trig1, LOW);
+  duration1 = pulseIn(echo1, HIGH);
+distCM1= duration1*0.034/2;
+  if (distCM1 >=10) {
+
+digitalWrite(L3, HIGH);
+} else {
+digitalWrite(L3, LOW);
+
+  
+
+}
+}
