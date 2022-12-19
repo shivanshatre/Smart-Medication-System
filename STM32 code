@@ -1,0 +1,84 @@
+#include "mbed.h"
+#include "TextLCD.h"
+TextLCD lcd(PA_3,PA_2,PA_10,PB_3,PB_5,PB_4);
+
+int h = 00;
+int m = 4;
+int s = 55;
+int flag = 0;
+int TIME = 0;
+
+DigitalOut L1(PB_1);
+DigitalOut L2(PB_6);
+DigitalIn buzz(PB_9);
+DigitalIn pb(PC_5);
+
+int main(){
+while(1){
+ 
+    int v=pb;
+    s = s + 1;
+    lcd.printf("TIME:");
+    lcd.printf(h);
+    lcd.printf(":");
+    lcd.printf(m);
+    lcd.printf(":");
+    lcd.printf(s);
+
+    if (flag == 24)
+        flag = 0;
+    wait(1);
+    lcd.clear();
+    if (s == 60)
+    {
+        s = 0;
+        m = m + 1;
+    }
+    if (m == 60)
+    {
+        m = 0;
+        h = h + 1;
+        flag = flag + 1;
+    }
+    if (h == 24)
+    {
+        h = 0;
+    } 
+  
+    if (h == 0 && m == 5)
+    {
+        // 1st led
+        if (s <= 10 )
+        {
+            L1=1;
+            buzz=1;
+            lcd.printf("Crocin");   
+          
+        }
+        
+    }
+    if (v == 0)
+    {
+       L1=0;
+       buzz=0;
+    }
+ 
+  if (h == 0 && m == 6)
+    {
+       
+        // 2nd led
+        if (s<=10)
+        {
+            L2=1;
+            buzz=1;
+            lcd.printf("Flexon");
+          
+        }
+    }
+    if (v == 0)
+    {
+        L2=0;
+        buzz=0;
+    }
+}
+}
